@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <header class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-full bg-green-700 flex items-center justify-center text-white font-bold">VSU</div>
-          <div class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Visayas State<br/>University</div>
+          <div class="text-sm font-semibold text-gray-700">VISAYAS STATE<br/>UNIVERSITY</div>
         </div>
         <nav class="text-sm text-gray-600 hidden md:flex gap-6 font-medium">
           <a href="#" class="hover:text-green-700 transition-colors">HOME</a>
