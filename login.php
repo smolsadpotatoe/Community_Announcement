@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="bg-white rounded-2xl shadow-2xl p-10 md:p-16 relative overflow-hidden">
       <header class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-green-700 flex items-center justify-center text-white font-bold">VSU</div>
-          <div class="text-sm font-semibold text-gray-700">VISAYAS STATE<br/>UNIVERSITY</div>
+          <div class="w-12 h-12 rounded-full bg-green-700 flex items-center justify-center text-white font-bold">UST</div>
+          <div class="text-sm font-semibold text-gray-700">UNAHAN SA<br/>TULAY UNIVERSITY</div>
         </div>
         <nav class="text-sm text-gray-600 hidden md:flex gap-6">
           <a href="#" class="hover:text-gray-800">HOME</a>
