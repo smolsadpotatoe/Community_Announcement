@@ -59,8 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="text-sm font-semibold text-gray-700">VISAYAS STATE<br/>UNIVERSITY</div>
         </div>
         <nav class="text-sm text-gray-600 hidden md:flex gap-6 font-medium">
-          <a href="#" class="hover:text-green-700 transition-colors">HOME</a>
-          <a href="#" class="hover:text-green-700 transition-colors">ABOUT</a>
+          <a href="about.php" class="hover:text-green-700 transition-colors">ABOUT</a>
         </nav>
       </header>
 
@@ -96,7 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </button>
               
               <div class="text-center mt-4">
-                <a href="#" class="text-xs text-gray-500 hover:text-green-700 transition-colors">Forgot password?</a>
+                <a href="forgot.php" class="text-xs text-gray-500 hover:text-green-700 transition-colors">Forgot password?</a>
+
               </div>
               
               <div class="flex items-center justify-center gap-4 mt-6 pt-6 border-t border-gray-100">

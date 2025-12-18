@@ -1,9 +1,11 @@
 <?php
 require 'config.php';
 require 'functions.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -45,81 +47,144 @@ if (empty($events)) {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community Bulletin Board System</title>
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
   <style>
     .burger div:nth-child(1).open { transform: rotate(-90deg) translateY(10px); }
     .burger div:nth-child(3).open { transform: rotate(90deg) translateY(-10px); }
+    
+    /* Active navigation item */
+    .nav-item.active {
+      background-color: #f0fdf4;
+      color: #166534;
+      border-left: 4px solid #16a34a;
+    }
+    
+    /* Smooth transitions */
+    .page-transition {
+      transition: opacity 0.3s ease-in-out;
+    }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans">
-  <!-- Header -->
-  <header class="bg-green-700 text-white p-4 flex justify-between items-center relative z-20">
-    <div id="burgerBtn" class="flex flex-col justify-around w-6 h-5 cursor-pointer transition-all duration-300 ease-in-out">
-      <div class="w-full h-0.5 bg-white transition-all duration-300"></div>
-      <div class="w-full h-0.5 bg-white transition-all duration-300"></div>
-      <div class="w-full h-0.5 bg-white transition-all duration-300"></div>
-    </div>
-    <h1 class="text-xl font-bold">COMMUNITY BULLETIN BOARD SYSTEM</h1>
-  </header>
-
-  <!-- Left Sidebar Panel -->
-  <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-green-50 to-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out z-30 border-r border-gray-200">
-    <div class="p-6">
-      <button id="closeSidebar" class="absolute top-4 right-4 text-green-600 hover:text-green-800 text-2xl font-bold transition-colors duration-200">&times;</button>
-      <h2 class="text-xl font-bold mb-6 text-green-800 border-b border-green-200 pb-2">Menu</h2>
-      <nav class="space-y-3">
-        <a href="?content=announcement" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 shadow-sm font-semibold">
-          <span class="mr-3 text-lg"><img src="icons/dashboard.png" alt="Dashboard"></span> Dashboard
-        </a>
-        <a href="?content=manageEvent" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 shadow-sm font-semibold">
-          <span class="mr-3 text-lg"><img src="icons/events.png" alt="Events"></span> Manage Events
-        </a>
-        <a href="?content=manageAnnouncement" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 shadow-sm font-semibold">
-          <span class="mr-3 text-lg"><img src="icons/announce.png" alt="Announcements"></span> Manage Announcements
-        </a>
-        <a href="?content=userLogs" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 shadow-sm font-semibold">
-          <span class="mr-3 text-lg"><img src="icons/userlogs.png" alt="Logs"></span> User Logs
-        </a>
-        <a href="logout.php" class="flex items-center px-4 py-3 text-gray-700 hover:bg-red-100 hover:text-red-900 rounded-lg transition-all duration-200 shadow-sm font-semibold">
-          <span class="mr-3 text-lg"><img src="icons/logout.png" alt="Logout"></span> Log Out
-        </a>
-      </nav>
-    </div>
-  </div>
-
-  <!-- Overlay for sidebar -->
-  <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20"></div>
-
+<body class="bg-gray-50 min-h-screen font-sans flex flex-col">
+  
+  <!-- Include Header Component -->
+  <?php include 'header-component.html'; ?>
+  
+  <!-- Flash Message -->
   <?php if ($message): ?>
-    <div class="max-w-4xl mx-auto mt-4 px-4">
-      <div class="bg-white p-3 rounded shadow text-sm text-green-700"><?= htmlspecialchars($message) ?></div>
+    <div class="container mx-auto px-4 mt-4">
+      <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500">
+        <div class="flex items-center">
+          <i class="fas fa-check-circle text-green-500 mr-3"></i>
+          <p class="text-green-700"><?php echo htmlspecialchars($message); ?></p>
+        </div>
+      </div>
     </div>
   <?php endif; ?>
-
   
   <!-- Main Content -->
-  <main class="p-6 gap-6">
-    <?php
-    if (isset($_GET['content'])) {
-        $content = $_GET['content'];
-        if ($content === "announcement") {
-            include './announcements.php';
-        } elseif ($content === "manageEvent") {
-            include './manage_events.php';
-        } elseif ($content === "manageAnnouncement") {
-            include './manage_announcements.php';
-        } else {
-            include './announcements.php'; // Default
+  <main class="flex-1 container mx-auto px-4 py-8">
+    <!-- Page Title -->
+    <div class="mb-8">
+      <?php
+      $pageTitle = "Dashboard";
+      if (isset($_GET['content'])) {
+        switch ($_GET['content']) {
+          case 'manageEvent':
+            $pageTitle = "Manage Events";
+            break;
+          case 'manageAnnouncement':
+            $pageTitle = "Manage Announcements";
+            break;
+          case 'userLogs':
+            $pageTitle = "User Logs";
+            break;
+          case 'announcement':
+          default:
+            $pageTitle = "Announcements";
         }
-    } else {
-        include './announcements.php'; // Default
-    }
-    ?>
+      }
+      ?>
+      <h2 class="text-3xl font-bold text-gray-800 mb-2"><?php echo $pageTitle; ?></h2>
+      <p class="text-gray-600">Welcome back, <?php echo htmlspecialchars($_SESSION['full_name'] ?? 'User'); ?>!</p>
+    </div>
+    
+    <!-- Dynamic Content Area -->
+    <div class="page-transition">
+      <?php
+      if (isset($_GET['content'])) {
+          $content = $_GET['content'];
+          if ($content === "announcement") {
+              include './dashboard_styles.php';
+          } elseif ($content === "manageEvent") {
+              include './manage_events.php';
+          } elseif ($content === "manageAnnouncement") {
+              include './manage_announcements.php';
+          } elseif ($content === "userLogs") {
+              include './user_logs.php';
+          } else {
+              include './dashboard_styles.php';
+          }
+      } else {
+          include './dashboard_styles.php';
+      }
+      ?>
+    </div>
   </main>
-
+  
+  <!-- Include Footer Component -->
+  <?php include 'footer.php'; ?>
+  
+  <!-- Include Modals and Scripts -->
   <?php include 'modals.php'; ?>
   <?php include 'scripts.php'; ?>
+  
+  <!-- Component Loader Script (Alternative method if includes don't work) -->
+  <script>
+    // Alternative method to load components if PHP includes fail
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to load component
+      function loadComponent(containerId, filePath) {
+        fetch(filePath)
+          .then(response => {
+            if (!response.ok) {
+              console.error(`Failed to load ${filePath}`);
+              return;
+            }
+            return response.text();
+          })
+          .then(html => {
+            if (html) {
+              document.getElementById(containerId).innerHTML = html;
+            }
+          })
+          .catch(error => {
+            console.error('Error loading component:', error);
+          });
+      }
+      
+      // Uncomment if you want to use JS loading instead of PHP includes
+      // loadComponent('header-container', 'header-component.html');
+      // loadComponent('footer-container', 'footer-com ponent.html');
+      
+      // Update active nav item
+      const currentPage = new URLSearchParams(window.location.search).get('content') || 'announcement';
+      document.querySelectorAll('.nav-item').forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && href.includes(currentPage)) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

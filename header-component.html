@@ -1,0 +1,194 @@
+<!-- header-component.html -->
+<style>
+  /* Dropdown styling with smooth transitions */
+  .profile-dropdown {
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  
+  .profile-group:hover .profile-dropdown {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Burger animation */
+  .burger.open div:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  
+  .burger.open div:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .burger.open div:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
+</style>
+
+<header class="bg-green-700 text-white p-4 flex justify-between items-center relative z-20">
+  <div id="burgerBtn" class="flex flex-col justify-around w-6 h-5 cursor-pointer transition-all duration-300 ease-in-out burger">
+    <div class="w-full h-0.5 bg-white transition-all duration-300"></div>
+    <div class="w-full h-0.5 bg-white transition-all duration-300"></div>
+    <div class="w-full h-0.5 bg-white transition-all duration-300"></div>
+  </div>
+  <h1 class="text-xl font-bold">COMMUNITY BULLETIN BOARD SYSTEM</h1>
+  
+  <!-- User Profile Dropdown -->
+  <div class="relative profile-group">
+    <button class="flex items-center space-x-2 focus:outline-none z-10">
+      <div class="w-8 h-8 bg-green-800 rounded-full flex items-center justify-center">
+        <i class="fas fa-user text-sm"></i>
+      </div>
+      <span class="hidden md:inline"><?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?></span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </button>
+  
+    <div class="profile-dropdown absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-40">
+      <div class="p-4 border-b border-gray-100">
+        <p class="font-medium text-gray-900"><?php echo htmlspecialchars($_SESSION['full_name'] ?? 'User'); ?></p>
+        <p class="text-gray-500 text-sm"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></p>
+      </div>
+      <div class="py-2">
+        <a href="profile.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center transition-colors duration-150">
+          <i class="fas fa-user-circle mr-3 text-gray-500"></i>Profile
+        </a>
+        <a href="settings.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center transition-colors duration-150">
+          <i class="fas fa-cog mr-3 text-gray-500"></i>Settings
+        </a>
+        <div class="border-t border-gray-100 mt-2 pt-2">
+          <a href="logout.php" class="block px-4 py-2 text-red-600 hover:bg-red-50 flex items-center transition-colors duration-150">
+            <i class="fas fa-sign-out-alt mr-3"></i>Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Left Sidebar Panel -->
+<div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-green-50 to-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out z-30 border-r border-gray-200">
+  <div class="p-6 h-full flex flex-col">
+    <button id="closeSidebar" class="absolute top-4 right-4 text-green-600 hover:text-green-800 text-2xl font-bold transition-colors duration-200">&times;</button>
+    
+    <!-- User Info -->
+    <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-green-200">
+      <div class="w-12 h-12 bg-green-700 rounded-full flex items-center justify-center">
+        <i class="fas fa-user text-white text-xl"></i>
+      </div>
+      <div>
+        <p class="font-bold text-gray-900"><?php echo htmlspecialchars($_SESSION['full_name'] ?? 'User'); ?></p>
+        <p class="text-gray-600 text-sm"><?php echo htmlspecialchars($_SESSION['role'] ?? 'Member'); ?></p>
+      </div>
+    </div>
+    
+    <!-- Navigation -->
+    <h2 class="text-xl font-bold mb-4 text-green-800">Menu</h2>
+    <nav class="space-y-2 flex-1">
+      <a href="?content=announcement" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 font-medium nav-item">
+        <span class="mr-3 text-lg"><img src="icons/dashboard.png" alt="Dashboard" class="w-5 h-5"></span> 
+        <span>Dashboard</span>
+        <?php if (!isset($_GET['content']) || $_GET['content'] === 'announcement'): ?>
+          <span class="ml-auto w-2 h-2 bg-green-600 rounded-full"></span>
+        <?php endif; ?>
+      </a>
+      
+      <a href="?content=manageEvent" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 font-medium nav-item">
+        <span class="mr-3 text-lg"><img src="icons/events.png" alt="Events" class="w-5 h-5"></span> 
+        <span>Manage Events</span>
+        <?php if (isset($_GET['content']) && $_GET['content'] === 'manageEvent'): ?>
+          <span class="ml-auto w-2 h-2 bg-green-600 rounded-full"></span>
+        <?php endif; ?>
+      </a>
+      
+      <a href="?content=manageAnnouncement" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 font-medium nav-item">
+        <span class="mr-3 text-lg"><img src="icons/announce.png" alt="Announcements" class="w-5 h-5"></span> 
+        <span>Manage Announcements</span>
+        <?php if (isset($_GET['content']) && $_GET['content'] === 'manageAnnouncement'): ?>
+          <span class="ml-auto w-2 h-2 bg-green-600 rounded-full"></span>
+        <?php endif; ?>
+      </a>
+      
+      <a href="?content=userLogs" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded-lg transition-all duration-200 font-medium nav-item">
+        <span class="mr-3 text-lg"><img src="icons/userlogs.png" alt="Logs" class="w-5 h-5"></span> 
+        <span>User Logs</span>
+        <?php if (isset($_GET['content']) && $_GET['content'] === 'userLogs'): ?>
+          <span class="ml-auto w-2 h-2 bg-green-600 rounded-full"></span>
+        <?php endif; ?>
+      </a>
+    </nav>
+    
+    <!-- Logout Button at Bottom -->
+    <div class="pt-4 border-t border-gray-200 mt-auto">
+      <a href="logout.php" class="flex items-center px-4 py-3 text-gray-700 hover:bg-red-100 hover:text-red-900 rounded-lg transition-all duration-200 font-medium">
+        <span class="mr-3 text-lg"><img src="icons/logout.png" alt="Logout" class="w-5 h-5"></span> 
+        <span>Log Out</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay for sidebar -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20"></div>
+
+<script>
+  // Sidebar functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const burgerBtn = document.getElementById('burgerBtn');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    if (burgerBtn) {
+      burgerBtn.addEventListener('click', function() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebarOverlay.classList.remove('hidden');
+        // Animate burger icon
+        this.classList.toggle('open');
+      });
+    }
+    
+    if (closeSidebar) {
+      closeSidebar.addEventListener('click', function() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+        burgerBtn.classList.remove('open');
+      });
+    }
+    
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', function() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+        burgerBtn.classList.remove('open');
+      });
+    }
+    
+    // Close sidebar when clicking a nav link on mobile
+    if (window.innerWidth < 768) {
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          sidebar.classList.add('-translate-x-full');
+          sidebarOverlay.classList.add('hidden');
+          burgerBtn.classList.remove('open');
+        });
+      });
+    }
+    
+    // Optional: Close dropdown when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+      const profileGroup = document.querySelector('.profile-group');
+      const dropdown = document.querySelector('.profile-dropdown');
+      
+      if (window.innerWidth < 768 && 
+          dropdown && 
+          !profileGroup.contains(event.target) && 
+          dropdown.style.opacity === '1') {
+        dropdown.style.opacity = '0';
+        dropdown.style.pointerEvents = 'none';
+      }
+    });
+  });
+</script>
